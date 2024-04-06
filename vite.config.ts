@@ -15,5 +15,11 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    // Указываем, что в режиме разработки используется пользовательский index.html
+    fs: {
+      strict: false
+    }
   }
 })

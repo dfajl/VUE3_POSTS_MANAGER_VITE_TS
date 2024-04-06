@@ -1,37 +1,31 @@
 <template>
-  <div @click="increment(counter)" class="hello">{{ counter }}</div>
+  <div class="app">
+    <UINavbar></UINavbar>
+    <routerView></routerView>
+  </div>
 </template>
 
 <script lang="ts">
+import UINavbar from './components/UI/UINavbar.vue'
 export default {
-  data() {
-    return {
-      counter: 0
-    }
-  },
-  methods: {
-    increment(param: number): number {
-      console.log(param)
-      this.counter++
-      return param
-    }
+  components: {
+    UINavbar
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.hello {
-  display: block;
-  cursor: pointer;
-  color: green;
-  background: #4c4646;
-  height: 50px;
-  width: 20%;
-  transition: 0.3s linear;
-  margin: 0 auto;
-  &:hover {
-    color: rgb(200, 219, 191);
-    background: #cf9e9e;
-  }
+<style lang="scss">
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #e1e1e1;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  padding: 20px;
 }
 </style>
