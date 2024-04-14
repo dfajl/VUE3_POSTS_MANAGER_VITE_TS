@@ -2,9 +2,7 @@
   <div class="navbar">
     <UIButton @click="$router.push('/')">Vue 3</UIButton>
     <UIButton @click="$router.push('/about')">О приложении </UIButton>
-    <!-- <UIButton @click="$router.push('/posts')">
-			Страница с постами
-		</UIButton> -->
+    <UIButton @click="$router.push('/posts')"> Страница с постами </UIButton>
   </div>
 </template>
 

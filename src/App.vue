@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts">
+import { onMounted } from 'vue'
 import UINavbar from './components/UI/UINavbar.vue'
 export default {
   components: {
