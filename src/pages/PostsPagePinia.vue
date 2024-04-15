@@ -2,6 +2,7 @@
   <div>
     <h1 style="text-align: center">Страница с постами</h1>
     <PostList :posts="posts" v-if="!isPostsLoading" />
+    <div class="post-item_wrapper" v-else>Загружаю посты с сервера...</div>
   </div>
 </template>
 

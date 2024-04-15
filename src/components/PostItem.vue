@@ -6,8 +6,8 @@
       <div><strong>Описание:</strong> {{ post.body }}</div>
     </div>
     <div style="width: 10%">
-      <UIButton class="post_btn" marginBottom="10px"> Удалить пост </UIButton>
-      <UIButton class="post_btn"> Открыть пост </UIButton>
+      <UIButton class="post_btn" marginBottom="10px" @click="deletePost"> Удалить пост </UIButton>
+      <UIButton class="post_btn" @click="openPost"> Открыть пост </UIButton>
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@
 import UIButton from './UI/UIButton.vue'
 import { Post } from '../types/commonTypes'
 import { PropType } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   components: { UIButton },
   props: {
@@ -24,11 +25,23 @@ export default {
       required: true
     }
   },
+  emits: ['deletePost'],
 
-  data() {
-    return {}
-  },
-  methods: {}
+  setup({ post }: { post: Post }, context) {
+    const router = useRouter()
+
+    function openPost() {
+      router.push(`/posts/${post.id}`)
+    }
+    function deletePost() {
+      context.emit('deletePost', post)
+    }
+
+    return {
+      openPost,
+      deletePost
+    }
+  }
 }
 </script>
 
