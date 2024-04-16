@@ -2,7 +2,7 @@
   <div class="post-item_wrapper">
     <h3>Список постов</h3>
     <transition-group name="post-list">
-      <PostItem v-for="post in posts" :key="post.id" :post="post" />
+      <PostItem @deletePostByID="deletePost" v-for="post in posts" :key="post.id" :post="post" />
     </transition-group>
     <div class="notification" v-if="!posts.length">
       ПУСТО :( <br />
@@ -24,10 +24,16 @@ export default {
       required: true
     }
   },
-  data() {
-    return {}
-  },
-  methods: {}
+  emits: ['deletePost'],
+  setup({ posts }: { posts: Post[] }, { emit }) {
+    function deletePost(id: number) {
+      emit('deletePost', id)
+    }
+
+    return {
+      deletePost
+    }
+  }
 }
 </script>
 

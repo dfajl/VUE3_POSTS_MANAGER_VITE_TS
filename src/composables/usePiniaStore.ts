@@ -7,6 +7,7 @@ export default function usePiniaStore(): {
   isPostsLoading: Ref<boolean>
   posts: Ref<Post[]>
   loadPosts: () => void
+  setPosts: (filteredPosts: Post[]) => void
 } {
   const store = usePostsStore() // инициализация стора
 
@@ -18,9 +19,15 @@ export default function usePiniaStore(): {
     store.fetchPosts()
   }
 
+  //создаю свою функцию для редактирования стейта
+  const setPosts = (filteredPosts: Post[]) => {
+    store.posts = filteredPosts
+  }
+
   return {
     isPostsLoading,
     posts,
-    loadPosts
+    loadPosts,
+    setPosts
   }
 }

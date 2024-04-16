@@ -1,8 +1,19 @@
 <template>
   <div>
     <h1 style="text-align: center">Страница с постами</h1>
-    <PostList :posts="posts" v-if="!isPostsLoading" />
-    <div class="post-item_wrapper" v-else>Загружаю посты с сервера...</div>
+
+    <div class="btn_wrapper">
+      <UIButton @click="showDialogWindow"> Создать пост </UIButton>
+    </div>
+    <!-- @update:show="isDialogVisible = $event" :show="isDialogVisible"  -->
+    <UIDialogWindow v-model:show="isDialogVisible">
+      <template #mainContent> <PostForm /> </template>
+    </UIDialogWindow>
+
+    <keep-alive>
+      <PostList @deletePost="deletePostItem" :posts="posts" v-if="!isPostsLoading" />
+      <div class="post-item_wrapper" v-else>Загружаю посты с сервера...</div>
+    </keep-alive>
   </div>
 </template>
 
@@ -11,26 +22,45 @@ import PostList from '@/components/PostList.vue'
 import usePiniaStore from '../composables/usePiniaStore'
 import { ref, onMounted, Ref } from 'vue'
 import { Post } from '../types/commonTypes'
+import UIButton from '../components/UI/UIButton.vue'
+import UIDialogWindow from '../components/UI/UIDialogWindow.vue'
+import PostForm from '../components/PostForm.vue'
 
 export default {
   components: {
-    PostList
+    PostList,
+    UIButton,
+    UIDialogWindow,
+    PostForm
   },
 
   setup() {
-    const {
-      posts,
-      isPostsLoading,
-      loadPosts
-    }: { posts: Ref<Post[]>; isPostsLoading: Ref<boolean>; loadPosts: () => void } = usePiniaStore()
+    const { posts, isPostsLoading, loadPosts, setPosts } = usePiniaStore()
+    const isDialogVisible = ref(false)
+
+    function deletePostItem(id: number) {
+      const filteredPosts = posts.value.filter((item) => item.id !== id)
+      setPosts(filteredPosts)
+    }
+
+    function showDialogWindow(): void {
+      isDialogVisible.value = true
+    }
 
     onMounted(() => {
-      loadPosts()
+      if (posts.value.length) {
+        return
+      } else {
+        loadPosts()
+      }
     })
 
     return {
       isPostsLoading,
-      posts
+      posts,
+      isDialogVisible,
+      deletePostItem,
+      showDialogWindow
     }
   }
 }

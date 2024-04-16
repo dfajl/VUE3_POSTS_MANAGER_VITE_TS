@@ -25,16 +25,16 @@ export default {
       required: true
     }
   },
-  emits: ['deletePost'],
+  emits: ['deletePostByID'],
 
-  setup({ post }: { post: Post }, context) {
+  setup({ post }: { post: Post }, { emit }) {
     const router = useRouter()
 
     function openPost() {
       router.push(`/posts/${post.id}`)
     }
     function deletePost() {
-      context.emit('deletePost', post)
+      emit('deletePostByID', post.id)
     }
 
     return {
