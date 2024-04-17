@@ -18,10 +18,16 @@
 import { ref, watch } from 'vue'
 import UIInput from './UI/UIInput.vue'
 import UIButton from './UI/UIButton.vue'
-export default {
+import { defineComponent } from 'vue'
+import { Post } from '../types/commonTypes'
+import type { Ref } from 'vue'
+export default defineComponent({
   components: {
     UIButton,
     UIInput
+  },
+  emits: {
+    create: (payload: Ref<Post>) => true
   },
   setup(props, { emit }) {
     const post = ref({
@@ -43,21 +49,16 @@ export default {
       }
 
       post.value.id = Date.now()
-      emit('create', post.value)
+      emit('create', post)
     }
 
     watch(
-      () => post.value.title,
-      (newValue) => {
-        if (newValue) {
+      () => [post.value.title, post.value.body],
+      ([newTitle, newBody]) => {
+        if (newTitle) {
           emptyInputTitle.value = false
         }
-      }
-    )
-    watch(
-      () => post.value.body,
-      (newValue) => {
-        if (newValue) {
+        if (newBody) {
           emptyInputBody.value = false
         }
       }
@@ -70,7 +71,7 @@ export default {
       createPost
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -79,7 +80,8 @@ form {
   flex-direction: column;
 }
 .warning {
-  color: rgba(245, 99, 99, 0.592);
+  margin-top: 5px;
+  color: rgba(247, 73, 73, 0.813);
 }
 .margin_btn {
   margin-top: 10px;

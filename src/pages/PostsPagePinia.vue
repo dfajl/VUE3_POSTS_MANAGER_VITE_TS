@@ -7,7 +7,7 @@
     </div>
     <!-- @update:show="isDialogVisible = $event" :show="isDialogVisible"  -->
     <UIDialogWindow v-model:show="isDialogVisible">
-      <template #mainContent> <PostForm /> </template>
+      <template #mainContent> <PostForm @create="createPost" /> </template>
     </UIDialogWindow>
 
     <keep-alive>
@@ -47,6 +47,12 @@ export default {
       isDialogVisible.value = true
     }
 
+    function createPost(post: Ref<Post>) {
+      const localPosts = [...posts.value, post.value]
+      setPosts(localPosts)
+      isDialogVisible.value = false
+    }
+
     onMounted(() => {
       if (posts.value.length) {
         return
@@ -60,7 +66,8 @@ export default {
       posts,
       isDialogVisible,
       deletePostItem,
-      showDialogWindow
+      showDialogWindow,
+      createPost
     }
   }
 }

@@ -7,7 +7,7 @@ export type Post = {
   body: string
   id: number
   title: string
-  userId: string
+  userId?: string
 }
 
 export type PostsState = {
