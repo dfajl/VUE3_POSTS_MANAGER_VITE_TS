@@ -25,10 +25,20 @@ export const usePostsStore = defineStore('postModule', {
     ]
   }),
   getters: {
-    searchPosts(): Post[] {
-      return this.posts.filter((post) =>
+    sortedAndSearchPosts(): Post[] {
+      return this.sortedPosts.filter((post) =>
         post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
+    },
+    sortedPosts(): Post[] {
+      if (this.selectedSort !== '') {
+        const selectedSort = this.selectedSort
+        return [...this.posts].sort((post1, post2) => {
+          return post1[selectedSort].localeCompare(post2[selectedSort])
+        })
+      } else {
+        return this.posts
+      }
     }
   },
   actions: {

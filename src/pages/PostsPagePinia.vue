@@ -3,14 +3,24 @@
 
   <div class="btn_wrapper">
     <UIButton @click="showDialogWindow"> Создать пост </UIButton>
+    <!-- <UISelect
+      :model-value="selectedSort"
+      @update:model-value="setSelectedSort"
+      :options="sortOptions"
+    >
+    </UISelect> -->
+    <UISelect v-model="selectedSort" :options="sortOptions"> </UISelect>
   </div>
 
   <UIInput placeholder="Найти пост" v-model="searchQuery" />
 
-  <PostList @deletePost="deletePostItem" :posts="searchPosts" v-if="!isPostsLoading" />
+  <PostList @deletePost="deletePostItem" :posts="sortedAndSearchPosts" v-if="!isPostsLoading" />
   <div class="post-item_wrapper" v-else>Загружаю посты с сервера...</div>
 
-  <!-- @update:show="isDialogVisible = $event" :show="isDialogVisible"  -->
+  <!-- 
+    @update:show="isDialogVisible = $event" 
+    :show="isDialogVisible"
+  -->
   <UIDialogWindow v-model:show="isDialogVisible">
     <template #mainContent> <PostForm @create="createPost" /> </template>
   </UIDialogWindow>
@@ -25,6 +35,7 @@ import UIButton from '../components/UI/UIButton.vue'
 import UIDialogWindow from '../components/UI/UIDialogWindow.vue'
 import PostForm from '../components/PostForm.vue'
 import UIInput from '../components/UI/UIInput.vue'
+import UISelect from '../components/UI/UISelect.vue'
 
 export default {
   components: {
@@ -32,11 +43,21 @@ export default {
     UIButton,
     UIDialogWindow,
     PostForm,
-    UIInput
+    UIInput,
+    UISelect
   },
 
   setup() {
-    const { posts, isPostsLoading, loadPosts, setPosts, searchQuery, searchPosts } = usePiniaStore()
+    const {
+      posts,
+      isPostsLoading,
+      loadPosts,
+      setPosts,
+      searchQuery,
+      sortedAndSearchPosts,
+      sortOptions,
+      selectedSort
+    } = usePiniaStore()
     const isDialogVisible = ref(false)
 
     function deletePostItem(id: number): void {
@@ -70,7 +91,9 @@ export default {
       showDialogWindow,
       createPost,
       searchQuery,
-      searchPosts
+      sortedAndSearchPosts,
+      sortOptions,
+      selectedSort
     }
   }
 }

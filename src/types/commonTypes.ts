@@ -1,4 +1,4 @@
-type SortOption = {
+export type SortOption = {
   value: string
   name: string
 }
@@ -13,7 +13,7 @@ export type Post = {
 export type PostsState = {
   posts: Post[]
   isPostsLoading: boolean
-  selectedSort: string
+  selectedSort: 'title' | 'body' | ''
   searchQuery: string
   page: number
   limit: number

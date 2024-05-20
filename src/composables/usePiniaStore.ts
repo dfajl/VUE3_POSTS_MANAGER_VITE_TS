@@ -1,6 +1,6 @@
 import { usePostsStore } from '../store/postModulePinia'
 import { storeToRefs } from 'pinia'
-import { Post } from '../types/commonTypes'
+import { Post, SortOption } from '../types/commonTypes'
 import { Ref, ComputedRef } from 'vue'
 
 export default function usePiniaStore(): {
@@ -9,12 +9,15 @@ export default function usePiniaStore(): {
   searchQuery: Ref<string>
   loadPosts: () => void
   setPosts: (filteredPosts: Post[]) => void
-  searchPosts: ComputedRef<Post[]>
+  sortedAndSearchPosts: ComputedRef<Post[]>
+  selectedSort: Ref<string>
+  sortOptions: Ref<SortOption[]>
 } {
   const store = usePostsStore() // инициализация стора
 
   //получаем стейт и геттеры стора
-  const { isPostsLoading, posts, searchQuery, searchPosts } = storeToRefs(store)
+  const { isPostsLoading, posts, searchQuery, sortedAndSearchPosts, selectedSort, sortOptions } =
+    storeToRefs(store)
 
   //инициализация actions
   const loadPosts = (): void => {
@@ -32,6 +35,8 @@ export default function usePiniaStore(): {
     loadPosts,
     setPosts,
     searchQuery,
-    searchPosts
+    sortedAndSearchPosts,
+    sortOptions,
+    selectedSort
   }
 }
