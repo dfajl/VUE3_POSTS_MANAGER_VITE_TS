@@ -24,7 +24,13 @@ export const usePostsStore = defineStore('postModule', {
       }
     ]
   }),
-  getters: {},
+  getters: {
+    searchPosts(): Post[] {
+      return this.posts.filter((post) =>
+        post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
+    }
+  },
   actions: {
     async fetchPosts(): Promise<void> {
       try {

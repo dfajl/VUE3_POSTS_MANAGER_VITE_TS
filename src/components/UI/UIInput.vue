@@ -8,7 +8,11 @@ export default {
   props: {
     modelValue: [String, Number]
   },
-  setup(props, { emit }) {
+  emits: {
+    'update:modelValue': (payload: string | number) => true
+  },
+  setup(props, { emit, attrs }) {
+    console.log(attrs)
     function updateInput(event: Event) {
       emit('update:modelValue', (event.target as HTMLInputElement).value)
     }

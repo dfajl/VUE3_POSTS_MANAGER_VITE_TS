@@ -1,20 +1,19 @@
 <template>
-  <div>
-    <h1 style="text-align: center">Страница с постами</h1>
+  <h1 style="text-align: center">Страница с постами</h1>
 
-    <div class="btn_wrapper">
-      <UIButton @click="showDialogWindow"> Создать пост </UIButton>
-    </div>
-    <!-- @update:show="isDialogVisible = $event" :show="isDialogVisible"  -->
-    <UIDialogWindow v-model:show="isDialogVisible">
-      <template #mainContent> <PostForm @create="createPost" /> </template>
-    </UIDialogWindow>
-
-    <keep-alive>
-      <PostList @deletePost="deletePostItem" :posts="posts" v-if="!isPostsLoading" />
-      <div class="post-item_wrapper" v-else>Загружаю посты с сервера...</div>
-    </keep-alive>
+  <div class="btn_wrapper">
+    <UIButton @click="showDialogWindow"> Создать пост </UIButton>
   </div>
+
+  <UIInput placeholder="Найти пост" v-model="searchQuery" />
+
+  <PostList @deletePost="deletePostItem" :posts="searchPosts" v-if="!isPostsLoading" />
+  <div class="post-item_wrapper" v-else>Загружаю посты с сервера...</div>
+
+  <!-- @update:show="isDialogVisible = $event" :show="isDialogVisible"  -->
+  <UIDialogWindow v-model:show="isDialogVisible">
+    <template #mainContent> <PostForm @create="createPost" /> </template>
+  </UIDialogWindow>
 </template>
 
 <script lang="ts">
@@ -25,20 +24,22 @@ import { Post } from '../types/commonTypes'
 import UIButton from '../components/UI/UIButton.vue'
 import UIDialogWindow from '../components/UI/UIDialogWindow.vue'
 import PostForm from '../components/PostForm.vue'
+import UIInput from '../components/UI/UIInput.vue'
 
 export default {
   components: {
     PostList,
     UIButton,
     UIDialogWindow,
-    PostForm
+    PostForm,
+    UIInput
   },
 
   setup() {
-    const { posts, isPostsLoading, loadPosts, setPosts } = usePiniaStore()
+    const { posts, isPostsLoading, loadPosts, setPosts, searchQuery, searchPosts } = usePiniaStore()
     const isDialogVisible = ref(false)
 
-    function deletePostItem(id: number) {
+    function deletePostItem(id: number): void {
       const filteredPosts = posts.value.filter((item) => item.id !== id)
       setPosts(filteredPosts)
     }
@@ -47,7 +48,7 @@ export default {
       isDialogVisible.value = true
     }
 
-    function createPost(post: Ref<Post>) {
+    function createPost(post: Ref<Post>): void {
       const localPosts = [...posts.value, post.value]
       setPosts(localPosts)
       isDialogVisible.value = false
@@ -67,7 +68,9 @@ export default {
       isDialogVisible,
       deletePostItem,
       showDialogWindow,
-      createPost
+      createPost,
+      searchQuery,
+      searchPosts
     }
   }
 }
