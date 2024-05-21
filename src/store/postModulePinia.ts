@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { defineStore } from 'pinia'
 import { Post, PostsState } from '../types/commonTypes'
+import { computed, ComputedRef } from 'vue'
 
 export const usePostsStore = defineStore('postModule', {
   // Options API like
@@ -21,16 +22,22 @@ export const usePostsStore = defineStore('postModule', {
       {
         value: 'body',
         name: 'По содержанию'
+      },
+      {
+        value: '',
+        name: 'Без сортировки'
       }
     ]
   }),
   getters: {
     sortedAndSearchPosts(): Post[] {
+      console.log('computing sortedAndSearchPosts')
       return this.sortedPosts.filter((post) =>
         post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
     },
     sortedPosts(): Post[] {
+      console.log('computing sortedPosts')
       if (this.selectedSort !== '') {
         const selectedSort = this.selectedSort
         return [...this.posts].sort((post1, post2) => {
@@ -58,7 +65,10 @@ export const usePostsStore = defineStore('postModule', {
 
         this.posts = response.data
         this.isPostsLoading = false
-        //return this.totalPages // нужно только для директивы v-intersection
+
+        // Вывод в консоль объектов computed
+        /* console.log('computed sortedPosts:', this.getSortedPostsRef())
+        console.log('computed sortedAndSearchPosts:', this.getSortedAndSearchPostsRef()) */
       } catch (error: unknown) {
         if (error instanceof Error) {
           alert(`Ошибка: ${error.message}`)
@@ -66,6 +76,13 @@ export const usePostsStore = defineStore('postModule', {
       } finally {
         this.isPostsLoading = false
       }
+    },
+    // для отладки
+    getSortedPostsRef(): ComputedRef<Post[]> {
+      return computed(() => this.sortedPosts)
+    },
+    getSortedAndSearchPostsRef(): ComputedRef<Post[]> {
+      return computed(() => this.sortedAndSearchPosts)
     }
   }
 })

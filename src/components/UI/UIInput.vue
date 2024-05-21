@@ -12,7 +12,6 @@ export default {
     'update:modelValue': (payload: string | number) => true
   },
   setup(props, { emit, attrs }) {
-    console.log(attrs)
     function updateInput(event: Event) {
       emit('update:modelValue', (event.target as HTMLInputElement).value)
     }

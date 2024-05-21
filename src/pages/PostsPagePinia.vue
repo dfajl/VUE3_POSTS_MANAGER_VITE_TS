@@ -3,12 +3,6 @@
 
   <div class="btn_wrapper">
     <UIButton @click="showDialogWindow"> Создать пост </UIButton>
-    <!-- <UISelect
-      :model-value="selectedSort"
-      @update:model-value="setSelectedSort"
-      :options="sortOptions"
-    >
-    </UISelect> -->
     <UISelect v-model="selectedSort" :options="sortOptions"> </UISelect>
   </div>
 
@@ -18,6 +12,7 @@
   <div class="post-item_wrapper" v-else>Загружаю посты с сервера...</div>
 
   <!-- 
+    v-model - синтаксический сахар для строк ниже.
     @update:show="isDialogVisible = $event" 
     :show="isDialogVisible"
   -->
