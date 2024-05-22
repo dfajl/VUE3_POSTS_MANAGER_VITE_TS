@@ -8,7 +8,10 @@
 
   <UIInput placeholder="Найти пост" v-model="searchQuery" />
 
-  <PostList @deletePost="deletePostItem" :posts="sortedAndSearchPosts" v-if="!isPostsLoading" />
+  <div v-if="!isPostsLoading" ref="rootArea">
+    <PostList @deletePost="deletePostItem" :posts="sortedAndSearchPosts" />
+    <div class="observer" ref="targetElement"></div>
+  </div>
   <div class="post-item_wrapper" v-else>Загружаю посты с сервера...</div>
 
   <!-- 
@@ -24,6 +27,7 @@
 <script lang="ts">
 import PostList from '@/components/PostList.vue'
 import usePiniaStore from '../composables/usePiniaStore'
+import useIntersectionObserver from '../composables/useIntersectionObserver'
 import { ref, onMounted, Ref } from 'vue'
 import { Post } from '../types/commonTypes'
 import UIButton from '../components/UI/UIButton.vue'
@@ -51,9 +55,13 @@ export default {
       searchQuery,
       sortedAndSearchPosts,
       sortOptions,
-      selectedSort
+      selectedSort,
+      loadInfinityPosts
     } = usePiniaStore()
-    const isDialogVisible = ref(false)
+
+    const isDialogVisible = ref<boolean>(false)
+    const targetElement = ref<Element | null>(null)
+    const rootArea = ref<Element | null>(null)
 
     function deletePostItem(id: number): void {
       const filteredPosts = posts.value.filter((item) => item.id !== id)
@@ -69,7 +77,7 @@ export default {
       setPosts(localPosts)
       isDialogVisible.value = false
     }
-
+    useIntersectionObserver(targetElement, rootArea, loadInfinityPosts)
     onMounted(() => {
       if (posts.value.length) {
         return
@@ -88,7 +96,9 @@ export default {
       searchQuery,
       sortedAndSearchPosts,
       sortOptions,
-      selectedSort
+      selectedSort,
+      targetElement,
+      rootArea
     }
   }
 }

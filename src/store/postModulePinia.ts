@@ -31,13 +31,13 @@ export const usePostsStore = defineStore('postModule', {
   }),
   getters: {
     sortedAndSearchPosts(): Post[] {
-      console.log('computing sortedAndSearchPosts')
+      //console.log('computing sortedAndSearchPosts')
       return this.sortedPosts.filter((post) =>
         post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
     },
     sortedPosts(): Post[] {
-      console.log('computing sortedPosts')
+      //console.log('computing sortedPosts')
       if (this.selectedSort !== '') {
         const selectedSort = this.selectedSort
         return [...this.posts].sort((post1, post2) => {
@@ -75,6 +75,26 @@ export const usePostsStore = defineStore('postModule', {
         }
       } finally {
         this.isPostsLoading = false
+      }
+    },
+    async loadInfinityPosts(): Promise<void> {
+      try {
+        this.page += 1
+        const response: AxiosResponse<Post[]> = await axios.get(
+          'https://jsonplaceholder.typicode.com/posts?',
+          {
+            params: {
+              _page: this.page,
+              _limit: this.limit
+            }
+          }
+        )
+        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+        this.posts = [...this.posts, ...response.data]
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          alert(`Ошибка: ${error.message}`)
+        }
       }
     },
     // для отладки

@@ -12,6 +12,7 @@ export default function usePiniaStore(): {
   sortedAndSearchPosts: ComputedRef<Post[]>
   selectedSort: Ref<string>
   sortOptions: Ref<SortOption[]>
+  loadInfinityPosts: () => void
 } {
   const store = usePostsStore() // инициализация стора
 
@@ -23,6 +24,9 @@ export default function usePiniaStore(): {
   const loadPosts = (): void => {
     store.fetchPosts()
   }
+  const loadInfinityPosts = (): void => {
+    store.loadInfinityPosts()
+  }
 
   //создаю свою функцию для редактирования стейта
   const setPosts = (filteredPosts: Post[]): void => {
@@ -33,6 +37,7 @@ export default function usePiniaStore(): {
     isPostsLoading,
     posts,
     loadPosts,
+    loadInfinityPosts,
     setPosts,
     searchQuery,
     sortedAndSearchPosts,
