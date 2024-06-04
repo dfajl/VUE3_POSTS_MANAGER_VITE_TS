@@ -6,7 +6,7 @@
     <UISelect v-model="selectedSort" :options="sortOptions"> </UISelect>
   </div>
 
-  <UIInput placeholder="Найти пост" v-model="searchQuery" />
+  <UIInput placeholder="Найти пост" rounded v-model="searchQuery" />
 
   <div v-if="!isPostsLoading" ref="rootArea">
     <PostList @deletePost="deletePostItem" :posts="sortedAndSearchPosts" />

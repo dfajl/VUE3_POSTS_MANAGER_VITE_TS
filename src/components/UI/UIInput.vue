@@ -1,12 +1,25 @@
 <template>
-  <input type="text" class="input" :value="modelValue" @input="updateInput" />
+  <input
+    type="text"
+    class="input"
+    :class="{ input_rounded: rounded }"
+    :value="modelValue"
+    @input="updateInput"
+  />
 </template>
 
 <script lang="ts">
 export default {
   name: 'UIInput',
   props: {
-    modelValue: [String, Number]
+    modelValue: {
+      type: [String, Number],
+      required: true
+    },
+    rounded: {
+      type: Boolean,
+      default: false
+    }
   },
   emits: {
     'update:modelValue': (payload: string | number) => true
@@ -32,5 +45,8 @@ export default {
   padding: 15px;
   //border: 2px solid teal;
   margin-top: 15px;
+}
+.input_rounded {
+  border-radius: 30px;
 }
 </style>
