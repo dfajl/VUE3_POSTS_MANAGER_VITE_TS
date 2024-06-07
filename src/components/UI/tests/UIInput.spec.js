@@ -5,7 +5,6 @@ import { nextTick } from 'vue';
 
 //Определяем группу тестов для компонента UIInput
 describe('UIInput', () => {
-
     // Первый тест: проверяет, что компонент определен
     // Ожидаем, что UIInput определен
     it('should be defined', () => {
@@ -46,11 +45,61 @@ describe('UIInput', () => {
             props: { rounded: false },
         });
         const input = wrapper.get('input');
-        wrapper.setProps({ rounded: true }); // Динамически изменяем пропсу rounded на true
-        await nextTick(); // Ждем, пока Vue обновит DOM
-
-        /* !!! Если не вызвать nextTick(), то тест НЕ пройдет, т.к. рендер и обновление DOM - это асинхронные действия */
+        await wrapper.setProps({ rounded: true }); // Динамически изменяем пропсу rounded на true
+        /* 
+            await nextTick() !!! Если не вызвать nextTick(), то тест НЕ пройдет, т.к. рендер и обновление DOM - это асинхронные действия.
+            Но метод setProps под капотом вызывает nextTick(), поэтому може сделать await
+        */
 
         expect(input.classes('input_rounded')).toBeTruthy();
+    });
+
+    it('should render input with modelValue', () => {
+        const TEST_VALUE = 'test';
+        const wrapper = mount(UIInput, {
+            props: { modelValue: TEST_VALUE },
+        });
+        const input = wrapper.get('input');
+        expect(input.element.value).toBe(TEST_VALUE);
+        /* 
+            рендерит ли наш инпут значение, переданное в пропс modelValue?
+        */
+    });
+
+    it('should emit update:modelValue on input with the passed value', async () => {
+        const wrapper = mount(UIInput);
+        const input = wrapper.get('input');
+        await input.setValue('test'); // устанавливаем на инпуте value и триггерим change и input
+
+        expect(wrapper.emitted('update:modelValue')).toBeTruthy(); // Эмитит ли инпут событие update:modelValue
+        expect(wrapper.emitted('update:modelValue')).toHaveLength(1); // порождается ли событие 1 раз?
+        expect(wrapper.emitted('update:modelValue')[0]).toEqual(['test']); // Эмитит ли инпут событие update:modelValue с определенным значением?
+        /* 
+            Запомни, в тестах лучше написать побольше expect и ожидать падение проверки в тесте, а не JS в тесте.
+            Если тут убрать первые две проверки с expect и событие не породится  в компоненте, то тест упадет именно 
+            из-за ошибки JS, т.к. он не сможет взять undefined[0] 
+        */
+    });
+
+    it('should have model', async () => {
+        let modelValue = 'test';
+
+        //монтирую инпут и передаю туда обработчик события обновления модели
+        const wrapper = mount(UIInput, {
+            props: {
+                modelValue,
+            },
+            attrs: {
+                'onUpdate:modelValue': ($event) => {
+                    modelValue = $event;
+                    wrapper.setProps({ modelValue });
+                },
+            },
+        });
+        const input = wrapper.get('input');
+        await input.setValue('new_test');
+
+        expect(modelValue).toBe('new_test');
+        expect(wrapper.props('modelValue')).toBe('new_test');
     });
 });
