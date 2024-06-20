@@ -1,4 +1,4 @@
-import { expect, test, describe, it } from 'vitest';
+import { expect, test, describe, it, vi } from 'vitest';
 import UIInput from '../UIInput.vue';
 import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
@@ -101,5 +101,46 @@ describe('UIInput', () => {
 
         expect(modelValue).toBe('new_test');
         expect(wrapper.props('modelValue')).toBe('new_test');
+    });
+
+    it('should set handler of change event on input', async () => {
+        /* 
+            Тест удостоверяется, что компонент UIInput правильно устанавливает 
+            и вызывает обработчик события change с корректным значением, 
+            когда значение элемента <input> изменяется. 
+        */
+        const handler = vi.fn();
+
+        //монтирую инпут и передаю туда обработчик события
+        const wrapper = mount(UIInput, {
+            attrs: {
+                onChange: ($event) => {
+                    handler($event.target.value);
+                },
+            },
+        });
+        const input = wrapper.get('input');
+        await input.setValue('new_test');
+
+        expect(handler).toHaveBeenCalled();
+        expect(handler).toHaveBeenCalledWith('new_test');
+    });
+
+    it('should match snapshot', () => {
+        const wrapper = mount(UIInput, {
+            props: {
+                value: 'initial value',
+            },
+        });
+
+        // Сравниваем снепшот с ожидаемым
+        expect(wrapper.html()).toMatchSnapshot();
+        /* 
+            снапшоты чаще используются для проверки верстки. Если поменять верстку, 
+            то тест не пройдет из-за отличий. Тест покажет эти отличия.
+
+            ! Довольно не часто используются. 
+            ! НАЧАТЬ С 0:26:56
+        */
     });
 });
