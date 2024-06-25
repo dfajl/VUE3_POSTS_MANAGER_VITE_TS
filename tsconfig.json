@@ -1,25 +1,27 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "allowSyntheticDefaultImports": true,
-    "noEmit": false,
-    "types": ["vite/client", "vue"],
-    "lib": ["esnext", "dom"]
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/composables/useIntersectionObserver.js",
-    "src/composables/useIntersectionObserver.js"
-  ],
-  "exclude": ["node_modules"]
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "strict": true,
+        "jsx": "preserve",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "allowSyntheticDefaultImports": true,
+        "noEmit": false,
+        "types": ["vite/client", "vue"],
+        "lib": ["esnext", "dom"]
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.d.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "src/composables/useIntersectionObserver.js",
+        "src/composables/useIntersectionObserver.js",
+        "src/pages/tests/PostsPagePinia.spec.js",
+        "src/pages/tests/PostsPagePinia.spec.js"
+    ],
+    "exclude": ["node_modules"]
 }
